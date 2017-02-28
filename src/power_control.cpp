@@ -17,10 +17,16 @@ int main (int argc, char** argv){
     ros::Subscriber write_sub = nh.subscribe("power_control_write", 1000, write_callback);
     ros::Publisher read_pub = nh.advertise<std_msgs::String>("power_control_read", 1000);
 
+    std::string device;
+    int baudrate;
+
+    nh.param("device", device, std::string("/dev/ttyUSB-power"));
+    nh.param("baudrate", baudrate, 115200);
+
     try
     {
-        ser.setPort("/dev/ttyUSB-power");
-        ser.setBaudrate(115200);
+        ser.setPort(device);
+        ser.setBaudrate(baudrate);
         serial::Timeout to = serial::Timeout::simpleTimeout(1000);
         ser.setTimeout(to);
         ser.open();
