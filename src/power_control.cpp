@@ -11,11 +11,11 @@ void write_callback(const std_msgs::String::ConstPtr& msg){
 }
 
 int main (int argc, char** argv){
-    ros::init(argc, argv, "serial_example_node");
+    ros::init(argc, argv, "power_control_node");
     ros::NodeHandle nh;
 
-    ros::Subscriber write_sub = nh.subscribe("write", 1000, write_callback);
-    ros::Publisher read_pub = nh.advertise<std_msgs::String>("read", 1000);
+    ros::Subscriber write_sub = nh.subscribe("power_control_write", 1000, write_callback);
+    ros::Publisher read_pub = nh.advertise<std_msgs::String>("power_control_read", 1000);
 
     try
     {
@@ -50,7 +50,6 @@ int main (int argc, char** argv){
             read_pub.publish(result);
         }
         loop_rate.sleep();
-
     }
 }
 
