@@ -17,7 +17,7 @@ include_directories(
   ${catkin_INCLUDE_DIRS}
 )
 
-add_executable(power_control src/serial_example_node.cpp)
+add_executable(power_control src/power_control.cpp)
 
 target_link_libraries(power_control
   ${catkin_LIBRARIES}
