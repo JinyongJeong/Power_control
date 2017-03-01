@@ -14,8 +14,8 @@ int main (int argc, char** argv){
     ros::init(argc, argv, "power_control_node");
     ros::NodeHandle nh;
 
-    ros::Subscriber write_sub = nh.subscribe("power_control_write", 1000, write_callback);
-    ros::Publisher read_pub = nh.advertise<std_msgs::String>("power_control_read", 1000);
+    ros::Subscriber write_sub = nh.subscribe("/power_control_write", 1000, write_callback);
+    ros::Publisher read_pub = nh.advertise<std_msgs::String>("/power_control_read", 1000);
 
     std::string device;
     int baudrate;
