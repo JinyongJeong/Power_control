@@ -8,30 +8,11 @@
 using namespace std;
 
 serial::Serial ser;
-bool process_active_flag = false;
 
 void write_callback(const std_msgs::String::ConstPtr& msg)
 {
-    if(process_active_flag == true){
-        ROS_INFO_STREAM("Writing to serial port" << msg->data);
-        ser.write(msg->data);
-    }
-}
-
-bool status_check_callback(std_srvs::SetBool::Request &req, std_srvs::SetBool::Response &res)
-{
-    res.success = process_active_flag;
-}
-
-bool process_run_callback(std_srvs::SetBool::Request &req, std_srvs::SetBool::Response &res)
-{    
-    process_active_flag = req.data;
-    res.success = process_active_flag;
-    if(process_active_flag == true){
-        cout <<"Receive process active" << endl;
-    }else{
-        cout <<"Receive process inactive" << endl;
-    }
+    ROS_INFO_STREAM("Writing to serial port" << msg->data);
+    ser.write(msg->data);
 }
 
 int main (int argc, char** argv){
@@ -41,8 +22,6 @@ int main (int argc, char** argv){
     ros::Subscriber write_sub = nh.subscribe("/power_control_write", 1000, write_callback);
     ros::Publisher read_pub = nh.advertise<std_msgs::String>("/power_control_read", 1000);
 
-    ros::ServiceServer status_check_srv = nh.advertiseService("/power_control_status_check", status_check_callback);
-    ros::ServiceServer process_run_srv = nh.advertiseService("/power_control_run", process_run_callback);
 
     std::string device;
     int baudrate;
@@ -74,7 +53,7 @@ int main (int argc, char** argv){
     while(ros::ok()){
 
         ros::spinOnce();
-        if(ser.available() && process_active_flag == true){        
+        if(ser.available()){        
             ROS_INFO_STREAM("Reading from serial port");
             std_msgs::String result;
             result.data = ser.read(ser.available());
