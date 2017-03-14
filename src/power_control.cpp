@@ -127,10 +127,12 @@ main (int argc, char *argv[])
     ros::Subscriber write_sub = nh.subscribe("/power_control_write", 1000, write_callback);
     ros::Publisher read_pub = nh.advertise<std_msgs::String>("/power_control_read", 1000);
 
-    char ttydev[] = "/dev/ttyUSB-power";
-    int brate = 115200;
 
-    int fd = serial_open (ttydev, brate, 0);
+    std::string ttydev;
+    int brate = 115200;
+    ros::param::param<std::string>("~device", ttydev, "/dev/ttyUSB-power");
+    ros::param::param<int>("~baudrate", brate, 115200);
+    int fd = serial_open (ttydev.c_str(), brate, 0);
 
     char buf [50];
     int len;
